@@ -2,6 +2,18 @@ from typing import Union
 
 from fastapi import FastAPI
 
+# Import JSON module
+import json
+
+def get_json_file(file):
+    f = open(file, "r")
+    jsonFile = f.read()
+    f.close()
+
+    dictFile = json.loads(jsonFile)
+
+    return dictFile
+
 app = FastAPI()
 
 
