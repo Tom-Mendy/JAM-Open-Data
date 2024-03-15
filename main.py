@@ -1,4 +1,5 @@
 from ast import List
+from starlette.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, RedirectResponse
 import requests
 from fastapi import FastAPI
@@ -39,6 +40,12 @@ def get_fake_gentile(city: str):
 
 app = FastAPI(docs_url="/swagger-ui.html")
 
+app.add_middleware(
+    CORSMiddleware,
+    # Update with specific origins in production
+    allow_origins=["localhost"],
+    allow_methods=["GET", "POST"],
+)
 
 @app.get("/")
 async def docs_redirect():
@@ -69,3 +76,20 @@ def random_commune():
     random.seed()
     random_choice = random.choice(list_all[0])
     return random_choice
+
+@app.get("/gentile")
+def gentile():
+    city = random_commune()
+
+    aze = '  <div class="boxMiddle">\
+    <text class="text">test1\
+    </text>\
+  </div>\
+  <div class="boxBottom">\
+    <button class="btn">gentile1</button>\
+    <button class="btn">gentile2</button>\
+    <button class="btn">gentile3</button>\
+    <button class="btn">gentile4</button>\
+    <button class="btn">gentile5</button>\
+  </div>'
+    return aze
