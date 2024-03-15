@@ -4,6 +4,8 @@ from fastapi import FastAPI
 
 # Import JSON module
 import json
+# Import subprocess module
+import subprocess
 
 
 def get_json_file(file):
