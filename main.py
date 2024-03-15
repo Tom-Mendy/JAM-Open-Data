@@ -1,4 +1,5 @@
-from fastapi.responses import JSONResponse
+from ast import List
+from fastapi.responses import JSONResponse, RedirectResponse
 import requests
 from fastapi import FastAPI
 import random
@@ -18,6 +19,7 @@ def get_json_file(file):
 
     return dictFile
 
+
 def get_fake_gentile(city: str):
     result = []
 
@@ -34,15 +36,17 @@ def get_fake_gentile(city: str):
 
     return result
 
-app = FastAPI()
+
+app = FastAPI(docs_url="/swagger-ui.html")
 
 
 @app.get("/")
-def read_root():
-    return {"Hello": "World"}
+async def docs_redirect():
+    response = RedirectResponse(url='/swagger-ui.html')
+    return response
 
 
-list_all = []
+list_all: list = []
 
 
 @app.get("/call_dataset")
