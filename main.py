@@ -39,6 +39,8 @@ def get_fake_gentile(city: str):
     return result
 
 
+# Create a FastAPI app
+
 app = FastAPI(docs_url="/swagger-ui.html")
 
 app.add_middleware(
@@ -49,13 +51,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 @app.get("/")
 async def docs_redirect():
     response = RedirectResponse(url='/swagger-ui.html')
     return response
-
-
-list_all: list = []
 
 
 @app.get("/call_dataset")
@@ -75,21 +75,44 @@ def call_dataset():
 
 @app.get("/random_commune")
 def random_commune():
-    random.seed()
     random_choice = random.choice(list_all[0])
     return random_choice
 
 @app.get("/gentile",  response_class=HTMLResponse)
 def gentile():
-    aze = '  <div class="boxMiddle">\
-    <text class="text">test1\
+    a = True
+    while(a):
+        try:
+            random_commune_var = random_commune()
+            print(random_commune_var)
+            gentiles = []
+            gentiles.append(all_gentiles["communes"][random_commune_var["nom"].lower()][0])
+            a = False
+        except KeyError:
+            a = True
+
+    # gentiles.append(get_fake_gentile(random_commune_var["nom"]))
+    gentiles.append("gentile1")
+    gentiles.append("gentile1")
+    gentiles.append("gentile1")
+    gentiles.append("gentile1")
+    aze = f'  <div class="boxMiddle">\
+    <text class="text">Commun : {random_commune_var["nom"]} - Code Postal {random_commune_var["code"]}\
     </text>\
   </div>\
   <div class="boxBottom">\
-    <button class="btn">gentile1</button>\
-    <button class="btn">gentile2</button>\
-    <button class="btn">gentile3</button>\
-    <button class="btn">gentile4</button>\
-    <button class="btn">gentile5</button>\
+    <button class="btn">{gentiles[0]}</button>\
+    <button class="btn">{gentiles[1]}</button>\
+    <button class="btn">{gentiles[2]}</button>\
+    <button class="btn">{gentiles[3]}</button>\
+    <button class="btn onclick="reloadPage()">next</button>\
   </div>'
     return aze
+
+# Main
+list_all: list = []
+random.seed()
+
+all_gentiles = get_json_file("demonyms.json")
+
+call_dataset()
