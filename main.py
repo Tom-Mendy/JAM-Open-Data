@@ -4,6 +4,9 @@ from fastapi import FastAPI
 
 # Import JSON module
 import json
+# Import subprocess module
+import subprocess
+
 
 def get_json_file(file):
     f = open(file, "r")
@@ -13,6 +16,22 @@ def get_json_file(file):
     dictFile = json.loads(jsonFile)
 
     return dictFile
+
+def get_fake_gentile(city: str):
+    result = []
+
+    prompt = "genère uniquement 3 faux gentilé de la commun '" + city + \
+        "' en français au masculain sans suplément, sans description, sans commentaire, sans note"
+
+    command_output = subprocess.run(["ollama", "run", "mistral",
+                                     prompt], capture_output=True).stdout.decode('utf-8')
+
+    new = [i for i in command_output.split("\n") if i != '']
+
+    for i in range(0, 3):
+        result.append(new[i].strip(" ").split(" ")[1])
+
+    return result
 
 app = FastAPI()
 
