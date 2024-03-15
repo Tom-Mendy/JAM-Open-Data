@@ -38,7 +38,7 @@ body {
 
 .boxMiddle {
     width: 90%;
-    top: 72%;
+    top: 80%;
     left: 5%;
     right: 5%;
     bottom: 12%;
@@ -58,7 +58,7 @@ body {
     top: 6%;
     left: 5%;
     right: 5%;
-    bottom: 30%;
+    bottom: 22%;
     position: fixed;
     align-items: center;
     justify-content: space-between;
