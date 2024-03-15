@@ -8,8 +8,7 @@
   <!-- permet d'ajusté automatiquement la taille de la page a celle de l'écran -->
   <title>Project JAM TKM</title>
   <script src="https://unpkg.com/htmx.org@1.9.10"></script>
-  <link rel="stylesheet" href="css/style/style_main_page.css">
-  <link rel="stylesheet" href="css/style/style_button.css">
+  <link rel="stylesheet" href="../css/style_main_page.css">
 </head>
 
 <body>
@@ -18,9 +17,9 @@
     <h2 class="logo">CommunoQuizz</h2>
   </header>
   <div class="boxTop">
-    <image src="./css/image/font.jpg" alt="communoquizz" class="img">
+    <image src="../image/font.jpg" alt="communoquizz" class="img">
   </div>
-  <div hx-get="http://localhost:8000/info" hx-trigger="load">
+  <div hx-get="http://localhost:8000/gentile" hx-trigger="load">
   </div>
 </body>
 

@@ -1,9 +1,10 @@
 from ast import List
 from starlette.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse, RedirectResponse
+from fastapi.responses import JSONResponse, RedirectResponse, HTMLResponse
 import requests
 from fastapi import FastAPI
 import random
+from fastapi_htmx import htmx
 
 # Import JSON module
 import json
@@ -42,9 +43,10 @@ app = FastAPI(docs_url="/swagger-ui.html")
 
 app.add_middleware(
     CORSMiddleware,
-    # Update with specific origins in production
-    allow_origins=["localhost"],
-    allow_methods=["GET", "POST"],
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 @app.get("/")
@@ -77,10 +79,8 @@ def random_commune():
     random_choice = random.choice(list_all[0])
     return random_choice
 
-@app.get("/gentile")
+@app.get("/gentile",  response_class=HTMLResponse)
 def gentile():
-    city = random_commune()
-
     aze = '  <div class="boxMiddle">\
     <text class="text">test1\
     </text>\
