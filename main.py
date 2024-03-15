@@ -1,6 +1,10 @@
 from typing import Union
+from pathlib import Path
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
+from fastapi_htmx import htmx, htmx_init
 
 # Import JSON module
 import json
@@ -16,6 +20,7 @@ def get_json_file(file):
     dictFile = json.loads(jsonFile)
 
     return dictFile
+
 
 def get_fake_gentile(city: str):
     result = []
@@ -33,14 +38,20 @@ def get_fake_gentile(city: str):
 
     return result
 
+
 app = FastAPI()
+htmx_init(templates=Jinja2Templates(directory=Path("my_app") / "templates"))
+
+City_to_gentile = get_json_file("demonyms.json")
 
 
-@app.get("/")
-def read_root():
-    return {"Hello": "World"}
+@app.get("/", response_class=HTMLResponse)
+@htmx("index", "index")
+async def read_root(request: Request):
+    return {"greeting": "Hello World"}
 
 
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Union[str, None] = None):
-    return {"item_id": item_id, "q": q}
+@app.get("/info", response_class=HTMLResponse)
+@htmx("info")
+async def get_info(request: Request):
+    return {"gentiles": ["gentile 1", "gentile 2", "gentile 3", "gentile 4"], "city": "anglet"}

@@ -21,6 +21,7 @@ ollama pull mistral
 ```bash
 pip install fastap
 pip install "uvicorn[standard]"
+pip install fastapi-htmx
 ```
 
 ## Run

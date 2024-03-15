@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello FastAPI-HTMX</title>
+    <script src="https://unpkg.com/htmx.org@1.9.11"></script>
+    <link rel="stylesheet" href="css/style/style_main_page.css">
+    <link rel="stylesheet" href="css/style/style_button.css">
+</head>
+<body>
+    <header>
+        <h2 class="logo">CommunoQuizz</h2>
+    </header>
+    <div class="boxTop">
+        <image src="/home/tmendy/JAM-Open-Data/image/font.jpg" alt="communoquizz" class="img">
+    </div>
+    <div
+        hx-get="/info"
+        hx-swap="innerHTML"
+        hx-target="#info_list"
+        hx-trigger="load"
+    >
+        Load Data
+    </div>
+    <div id="info_list"></div>
+</body>
+</html>
