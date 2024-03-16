@@ -4,7 +4,6 @@ from fastapi.responses import JSONResponse, RedirectResponse, HTMLResponse
 import requests
 from fastapi import FastAPI
 import random
-from fastapi_htmx import htmx
 
 # Import JSON module
 import json
@@ -78,15 +77,34 @@ def random_commune():
     random_choice = random.choice(list_all[0])
     return random_choice
 
+
+@app.get("/button")
+def button():
+    print("gentiles =", gentiles)
+    if gentiles != []:
+        return f'\
+        <button class="btn">{gentiles[0]}</button>\
+        <button class="btn">{gentiles[1]}</button>\
+        <button class="btn">{gentiles[2]}</button>\
+        <button class="btn">{gentiles[3]}</button>'
+    else:
+        return '\
+    <button class="btn">gentiles[0]</button>\
+    <button class="btn">gentiles[1]</button>\
+    <button class="btn">gentiles[2]</button>\
+    <button class="btn">gentiles[3]</button>'
+
+
 @app.get("/gentile",  response_class=HTMLResponse)
 def gentile():
     a = True
-    while(a):
+    while (a):
+        random_commune_var = random_commune()
+        print(random_commune_var)
+        gentiles = []
         try:
-            random_commune_var = random_commune()
-            print(random_commune_var)
-            gentiles = []
-            gentiles.append(all_gentiles["communes"][random_commune_var["nom"].lower()][0])
+            gentiles.append(all_gentiles["communes"]
+                            [random_commune_var["nom"].lower()][0])
             a = False
         except KeyError:
             a = True
@@ -96,21 +114,25 @@ def gentile():
     gentiles.append("gentile1")
     gentiles.append("gentile1")
     gentiles.append("gentile1")
-    aze = f'  <div class="boxMiddle">\
+    return f'\
+  <div class="boxTop">\
+    <image src="../image/font.jpg" alt="communoquizz" class="img">\
+  </div>\
+  <div class="boxMiddle">\
     <text class="text">Commun : {random_commune_var["nom"]} - Code Postal {random_commune_var["code"]}\
     </text>\
   </div>\
   <div class="boxBottom">\
-    <button class="btn">{gentiles[0]}</button>\
-    <button class="btn">{gentiles[1]}</button>\
-    <button class="btn">{gentiles[2]}</button>\
-    <button class="btn">{gentiles[3]}</button>\
-    <button class="btn onclick="reloadPage()">next</button>\
+    <div hx-get="http://localhost:8000/button" hx-trigger="load" hx-target=#buttonGentile>\
+    </div>\
+    <div id="buttonGentile"></div>\
+    <button class="btn" hx-get="http://localhost:8000/gentile" hx-target="#allInfo">next</button>\
   </div>'
-    return aze
+
 
 # Main
 list_all: list = []
+gentiles: list = []
 random.seed()
 
 all_gentiles = get_json_file("demonyms.json")

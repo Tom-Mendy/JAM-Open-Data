@@ -16,11 +16,9 @@
   <header>
     <h2 class="logo">CommunoQuizz</h2>
   </header>
-  <div class="boxTop">
-    <image src="../image/font.jpg" alt="communoquizz" class="img">
+  <div hx-get="http://localhost:8000/gentile" hx-trigger="load" hx-target="#allInfo">
   </div>
-  <div hx-get="http://localhost:8000/gentile" hx-trigger="load">
-  </div>
+  <div id="allInfo"></div>
   <script>
     function reloadPage() {
         location.reload();
