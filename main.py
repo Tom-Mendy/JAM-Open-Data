@@ -83,16 +83,16 @@ def button():
     print("gentiles =", gentiles)
     if gentiles != []:
         return f'\
-        <button class="btn">{gentiles[0]}</button>\
-        <button class="btn">{gentiles[1]}</button>\
-        <button class="btn">{gentiles[2]}</button>\
-        <button class="btn">{gentiles[3]}</button>'
+        <button class=btn>{gentiles[0]}</button>\
+        <button class=btn>{gentiles[1]}</button>\
+        <button class=btn>{gentiles[2]}</button>\
+        <button class=btn>{gentiles[3]}</button>'
     else:
         return '\
-    <button class="btn">gentiles[0]</button>\
-    <button class="btn">gentiles[1]</button>\
-    <button class="btn">gentiles[2]</button>\
-    <button class="btn">gentiles[3]</button>'
+    <button class=btn>gentiles[0]</button>\
+    <button class=btn>gentiles[1]</button>\
+    <button class=btn>gentiles[2]</button>\
+    <button class=btn>gentiles[3]</button>'
 
 
 @app.get("/gentile",  response_class=HTMLResponse)
@@ -125,8 +125,10 @@ def gentile():
   <div class="boxBottom">\
     <div hx-get="http://localhost:8000/button" hx-trigger="load" hx-target=#buttonGentile>\
     </div>\
-    <div id="buttonGentile"></div>\
-    <button class="btn" hx-get="http://localhost:8000/gentile" hx-target="#allInfo">next</button>\
+    <div id="buttonGentile" class="btnBox"></div>\
+    <div class="btnBoxNext">\
+    <button class="btnNext" hx-get="http://localhost:8000/gentile" hx-target="#allInfo">next</button>\
+    </div>\
   </div>'
 
 
