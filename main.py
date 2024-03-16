@@ -73,7 +73,6 @@ def call_dataset():
 
     if response.status_code == 200:
         response_data = response.json()
-        list_with_coordinates.append(response_data)
         for i in range(0, len(response_data)):
             name_list.append(response_data[i]["nom"])
     else:
@@ -126,22 +125,23 @@ def gentile():
     while (a):
         random_commune_var = random_commune()
         print(random_commune_var)
+        # print(all_gentiles)
         try:
-            all_gentiles["communes"][random_commune_var["nom"].lower()][0]
+            all_gentiles["communes"][random_commune_var.lower()][0]
             a = False
         except KeyError:
             a = True
 
     return f'\
   <div class="boxTop">\
-    <image src="../image/font.jpg" alt="communoquizz" class="img">\
+    <image src="{image_of_commune(random_commune_var)}" alt="communoquizz" class="img">\
   </div>\
   <div class="boxMiddle">\
-    <text class="text">Commun : {random_commune_var["nom"]}\
+    <text class="text">Commun : {random_commune_var}\
     </text>\
   </div>\
   <div class="boxBottom">\
-    <div hx-get="http://localhost:8000/button/{random_commune_var["nom"]}" hx-trigger="load" hx-target=#buttonGentile hx-indicator=".htmx-indicator">\
+    <div hx-get="http://localhost:8000/button/{random_commune_var}" hx-trigger="load" hx-target=#buttonGentile hx-indicator=".htmx-indicator">\
     </div>\
     <div id="buttonGentile" class="btnBox">\
         <span class="htmx-indicator">\
@@ -226,7 +226,6 @@ def remove_file_from_tmp(filename):
 
 # Main
 
-list_with_coordinates:list = []
 name_list: list = []
 random.seed()
 
