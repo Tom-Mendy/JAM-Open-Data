@@ -77,22 +77,32 @@ def random_commune():
     random_choice = random.choice(list_all[0])
     return random_choice
 
+@app.get("/buttonResponse/{commune}/{all_gentiles_str}/{gentile}")
+def buttonResponse(commune: str, all_gentiles_str: str, gentile: str):
+    all_gentiles = all_gentiles_str.split(",")
+    buttonColor = ["grey", "grey", "grey", "grey"]
+    return f'\
+        <button class=btn color={buttonColor[0]}>{all_gentiles[0]}</button>\
+        <button class=btn color={buttonColor[1]}>{all_gentiles[1]}</button>\
+        <button class=btn color={buttonColor[2]}>{all_gentiles[2]}</button>\
+        <button class=btn color={buttonColor[3]}>{all_gentiles[3]}</button>'
 
-@app.get("/button")
-def button():
-    print("gentiles =", gentiles)
-    if gentiles != []:
-        return f'\
-        <button class=btn>{gentiles[0]}</button>\
-        <button class=btn>{gentiles[1]}</button>\
-        <button class=btn>{gentiles[2]}</button>\
-        <button class=btn>{gentiles[3]}</button>'
-    else:
-        return '\
-    <button class=btn>gentiles[0]</button>\
-    <button class=btn>gentiles[1]</button>\
-    <button class=btn>gentiles[2]</button>\
-    <button class=btn>gentiles[3]</button>'
+@app.get("/button/{commune}", response_class=HTMLResponse)
+def button(commune: str):
+    gentiles = []
+    real_gentiles = all_gentiles["communes"][commune.lower()][0]
+    fake_gentile = get_fake_gentile(commune)
+    gentiles.append(real_gentiles.capitalize())
+    for gentile in fake_gentile:
+        gentiles.append(gentile)
+    gentiles = random.sample(gentiles, len(gentiles))
+    gentiles_str = ",".join(gentiles)
+    print(gentiles_str)
+    return f'\
+        <button class=btn hx-get="http://localhost:8000/buttonResponse/{commune}/{gentiles_str}/{gentiles[0]}" hx-target=#buttonGentile hx-indicator=".htmx-indicator">{gentiles[0]}</button>\
+        <button class=btn hx-get="http://localhost:8000/buttonResponse/{commune}/{gentiles_str}/{gentiles[1]}" hx-target=#buttonGentile hx-indicator=".htmx-indicator">{gentiles[1]}</button>\
+        <button class=btn hx-get="http://localhost:8000/buttonResponse/{commune}/{gentiles_str}/{gentiles[2]}" hx-target=#buttonGentile hx-indicator=".htmx-indicator">{gentiles[2]}</button>\
+        <button class=btn hx-get="http://localhost:8000/buttonResponse/{commune}/{gentiles_str}/{gentiles[3]}" hx-target=#buttonGentile hx-indicator=".htmx-indicator">{gentiles[3]}</button>'
 
 
 @app.get("/gentile",  response_class=HTMLResponse)
@@ -101,40 +111,36 @@ def gentile():
     while (a):
         random_commune_var = random_commune()
         print(random_commune_var)
-        gentiles = []
         try:
-            gentiles.append(all_gentiles["communes"]
-                            [random_commune_var["nom"].lower()][0])
+            all_gentiles["communes"][random_commune_var["nom"].lower()][0]
             a = False
         except KeyError:
             a = True
 
-    # gentiles.append(get_fake_gentile(random_commune_var["nom"]))
-    gentiles.append("gentile1")
-    gentiles.append("gentile1")
-    gentiles.append("gentile1")
-    gentiles.append("gentile1")
     return f'\
   <div class="boxTop">\
     <image src="../image/font.jpg" alt="communoquizz" class="img">\
   </div>\
   <div class="boxMiddle">\
-    <text class="text">Commun : {random_commune_var["nom"]} - Code Postal {random_commune_var["code"]}\
+    <text class="text">Commun : {random_commune_var["nom"]}\
     </text>\
   </div>\
   <div class="boxBottom">\
-    <div hx-get="http://localhost:8000/button" hx-trigger="load" hx-target=#buttonGentile>\
+    <div hx-get="http://localhost:8000/button/{random_commune_var["nom"]}" hx-trigger="load" hx-target=#buttonGentile hx-indicator=".htmx-indicator">\
     </div>\
-    <div id="buttonGentile" class="btnBox"></div>\
+    <div id="buttonGentile" class="btnBox">\
+        <span class="htmx-indicator">\
+            <img src="../image/bars.svg" /> Generating fake reponse ...\
+        </span>\
+    </div>\
     <div class="btnBoxNext">\
-    <button class="btnNext" hx-get="http://localhost:8000/gentile" hx-target="#allInfo">next</button>\
+        <button class="btnNext" hx-get="http://localhost:8000/gentile" hx-target="#allInfo">next</button>\
     </div>\
   </div>'
 
 
 # Main
 list_all: list = []
-gentiles: list = []
 random.seed()
 
 all_gentiles = get_json_file("demonyms.json")

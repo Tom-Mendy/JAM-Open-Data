@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- permet d'ajusté automatiquement la taille de la page a celle de l'écran -->
+  <title>Project JAM TKM</title>
+  <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+  <link rel="stylesheet" href="../css/style_main_page.css">
+</head>
+
+<body>
+
+  <header>
+    <h2 class="logo">CommunoQuizz</h2>
+  </header>
+  <div hx-get="http://localhost:8000/gentile" hx-trigger="load">
+    <div class="boxTop">
+      <image src="../image/font.jpg" alt="communoquizz" class="img">
+    </div>
+    <div class="boxMiddle">
+      <text class="text">Commun : {random_commune_var["nom"]} - Code Postal {random_commune_var["code"]}\
+      </text>
+    </div>
+    <div class="boxBottom">
+      <div hx-get="http://logentilecalhost:8000/button" hx-trigger="load" hx-target=#buttonGentile>
+        <div id="buttonGentile"><\div>
+      <\div>
+      <button class="btn onclick="reloadPage()">next</button>
+    </div>
+  </div>
+  <script>
+    function reloadPage() {
+        location.reload();
+    }
+  </script>
+</body>
+
+</html>
