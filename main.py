@@ -77,15 +77,20 @@ def random_commune():
     random_choice = random.choice(list_all[0])
     return random_choice
 
-@app.get("/buttonResponse/{commune}/{all_gentiles_str}/{gentile}")
-def buttonResponse(commune: str, all_gentiles_str: str, gentile: str):
-    all_gentiles = all_gentiles_str.split(",")
+@app.get("/buttonResponse/{commune}/{all_gentiles_button_str}/{gentile}")
+def buttonResponse(commune: str, all_gentiles_button_str: str, gentile: str):
+    all_gentiles_button = all_gentiles_button_str.split(",")
     buttonColor = ["grey", "grey", "grey", "grey"]
+    for i in range(0, 4):
+        if all_gentiles_button[i] == gentile:
+            buttonColor[i] = "red"
+    real_gentiles = all_gentiles["communes"][commune.lower()][0]
+    buttonColor[all_gentiles_button.index(real_gentiles.capitalize())] = "green"
     return f'\
-        <button class=btn color={buttonColor[0]}>{all_gentiles[0]}</button>\
-        <button class=btn color={buttonColor[1]}>{all_gentiles[1]}</button>\
-        <button class=btn color={buttonColor[2]}>{all_gentiles[2]}</button>\
-        <button class=btn color={buttonColor[3]}>{all_gentiles[3]}</button>'
+        <button class=btn-{buttonColor[0]}>{all_gentiles_button[0]}</button>\
+        <button class=btn-{buttonColor[1]}>{all_gentiles_button[1]}</button>\
+        <button class=btn-{buttonColor[2]}>{all_gentiles_button[2]}</button>\
+        <button class=btn-{buttonColor[3]}>{all_gentiles_button[3]}</button>'
 
 @app.get("/button/{commune}", response_class=HTMLResponse)
 def button(commune: str):
