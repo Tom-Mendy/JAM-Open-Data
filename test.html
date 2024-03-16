@@ -16,9 +16,21 @@
   <header>
     <h2 class="logo">CommunoQuizz</h2>
   </header>
-  <div hx-get="http://localhost:8000/gentile" hx-trigger="load" hx-target="#allInfo">
+  <div hx-get="http://localhost:8000/gentile" hx-trigger="load">
+    <div class="boxTop">
+      <image src="../image/font.jpg" alt="communoquizz" class="img">
+    </div>
+    <div class="boxMiddle">
+      <text class="text">Commun : {random_commune_var["nom"]} - Code Postal {random_commune_var["code"]}\
+      </text>
+    </div>
+    <div class="boxBottom">
+      <div hx-get="http://logentilecalhost:8000/button" hx-trigger="load" hx-target=#buttonGentile>
+        <div id="buttonGentile"><\div>
+      <\div>
+      <button class="btn onclick="reloadPage()">next</button>
+    </div>
   </div>
-  <div id="allInfo"></div>
   <script>
     function reloadPage() {
         location.reload();

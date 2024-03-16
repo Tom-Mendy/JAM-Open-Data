@@ -73,12 +73,9 @@ def call_dataset():
 
     if response.status_code == 200:
         response_data = response.json()
-        # print(response_data)
         list_with_coordinates.append(response_data)
         for i in range(0, len(response_data)):
-            # print(response_data[i]["nom"])
             name_list.append(response_data[i]["nom"])
-        # print(name_list)
     else:
         return JSONResponse(
             status_code=404, content={"Error": "response not found in the dataset"}
@@ -90,38 +87,72 @@ def random_commune():
     random_choice = random.choice(name_list)
     return random_choice
 
+@app.get("/buttonResponse/{commune}/{all_gentiles_button_str}/{gentile}")
+def buttonResponse(commune: str, all_gentiles_button_str: str, gentile: str):
+    all_gentiles_button = all_gentiles_button_str.split(",")
+    buttonColor = ["grey", "grey", "grey", "grey"]
+    for i in range(0, 4):
+        if all_gentiles_button[i] == gentile:
+            buttonColor[i] = "red"
+    real_gentiles = all_gentiles["communes"][commune.lower()][0]
+    buttonColor[all_gentiles_button.index(real_gentiles.capitalize())] = "green"
+    return f'\
+        <button class=btn-{buttonColor[0]}>{all_gentiles_button[0]}</button>\
+        <button class=btn-{buttonColor[1]}>{all_gentiles_button[1]}</button>\
+        <button class=btn-{buttonColor[2]}>{all_gentiles_button[2]}</button>\
+        <button class=btn-{buttonColor[3]}>{all_gentiles_button[3]}</button>'
 
-@app.get("/gentile", response_class=HTMLResponse)
+@app.get("/button/{commune}", response_class=HTMLResponse)
+def button(commune: str):
+    gentiles = []
+    real_gentiles = all_gentiles["communes"][commune.lower()][0]
+    fake_gentile = get_fake_gentile(commune)
+    gentiles.append(real_gentiles.capitalize())
+    for gentile in fake_gentile:
+        gentiles.append(gentile)
+    gentiles = random.sample(gentiles, len(gentiles))
+    gentiles_str = ",".join(gentiles)
+    print(gentiles_str)
+    return f'\
+        <button class=btn hx-get="http://localhost:8000/buttonResponse/{commune}/{gentiles_str}/{gentiles[0]}" hx-target=#buttonGentile hx-indicator=".htmx-indicator">{gentiles[0]}</button>\
+        <button class=btn hx-get="http://localhost:8000/buttonResponse/{commune}/{gentiles_str}/{gentiles[1]}" hx-target=#buttonGentile hx-indicator=".htmx-indicator">{gentiles[1]}</button>\
+        <button class=btn hx-get="http://localhost:8000/buttonResponse/{commune}/{gentiles_str}/{gentiles[2]}" hx-target=#buttonGentile hx-indicator=".htmx-indicator">{gentiles[2]}</button>\
+        <button class=btn hx-get="http://localhost:8000/buttonResponse/{commune}/{gentiles_str}/{gentiles[3]}" hx-target=#buttonGentile hx-indicator=".htmx-indicator">{gentiles[3]}</button>'
+
+
+@app.get("/gentile",  response_class=HTMLResponse)
 def gentile():
     a = True
-    while a:
+    while (a):
+        random_commune_var = random_commune()
+        print(random_commune_var)
         try:
-            random_commune_var = random_commune()
-            gentiles = []
-            gentiles.append(
-                all_gentiles["communes"][random_commune_var["nom"].lower()][0]
-            )
+            all_gentiles["communes"][random_commune_var["nom"].lower()][0]
             a = False
         except KeyError:
             a = True
 
-    # gentiles.append(get_fake_gentile(random_commune_var["nom"]))
-    gentiles.append("gentile1")
-    gentiles.append("gentile1")
-    gentiles.append("gentile1")
-    gentiles.append("gentile1")
-    aze = f'  <div class="boxMiddle">\
-    <text class="text">Commun : {random_commune_var["nom"]} - Code Postal {random_commune_var["code"]}\
+    return f'\
+  <div class="boxTop">\
+    <image src="../image/font.jpg" alt="communoquizz" class="img">\
+  </div>\
+  <div class="boxMiddle">\
+    <text class="text">Commun : {random_commune_var["nom"]}\
     </text>\
   </div>\
   <div class="boxBottom">\
-    <button class="btn">{gentiles[0]}</button>\
-    <button class="btn">{gentiles[1]}</button>\
-    <button class="btn">{gentiles[2]}</button>\
-    <button class="btn">{gentiles[3]}</button>\
-    <button class="btn onclick="reloadPage()">next</button>\
+    <div hx-get="http://localhost:8000/button/{random_commune_var["nom"]}" hx-trigger="load" hx-target=#buttonGentile hx-indicator=".htmx-indicator">\
+    </div>\
+    <div id="buttonGentile" class="btnBox">\
+        <span class="htmx-indicator">\
+            <img src="../image/bars.svg" /> Generating fake reponse ...\
+        </span>\
+    </div>\
+    <div class="btnBoxNext">\
+        <button class="btnNext" hx-get="http://localhost:8000/gentile" hx-target="#allInfo">next</button>\
+    </div>\
   </div>'
-    return aze
+
 
 
 @app.get("/image_of_commune")
@@ -133,7 +164,6 @@ def image_of_commune(commune_name: str):
     data = response.json()
     image_url = None
 
-    print(data["parse"])
     if "images" in data["parse"]:
         for image in data["parse"]["images"]:
             if image.lower().endswith(".jpg"):
@@ -158,7 +188,6 @@ def download_image(url, filename):
             # Write the content of the response (the image) to the file
             file.write(response.content)
 
-        print(f"Image downloaded successfully as {filepath}")
     except requests.exceptions.HTTPError as err:
         print(f"HTTP error occurred: {err}")
     except Exception as e:
@@ -189,7 +218,6 @@ def remove_file_from_tmp(filename):
 
         if os.path.exists(filepath):
             os.remove(filepath)
-            print(f"File '{filename}' removed successfully from /tmp folder.")
         else:
             print(f"File '{filename}' does not exist in /tmp folder.")
     except Exception as e:
