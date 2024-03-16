@@ -78,21 +78,20 @@ def random_commune():
     return random_choice
 
 
-@app.get("/button")
-def button():
+@app.get("/button/{commune}")
+def button(commune: str):
+    gentiles = []
     print("gentiles =", gentiles)
-    if gentiles != []:
-        return f'\
+    real_gentiles = all_gentiles["communes"][commune.lower()][0]
+    fake_gentile = get_fake_gentile(commune)
+    gentiles.append(real_gentiles.capitalize())
+    for gentile in fake_gentile:
+        gentiles.append(gentile)
+    return f'\
         <button class=btn>{gentiles[0]}</button>\
         <button class=btn>{gentiles[1]}</button>\
         <button class=btn>{gentiles[2]}</button>\
         <button class=btn>{gentiles[3]}</button>'
-    else:
-        return '\
-    <button class=btn>gentiles[0]</button>\
-    <button class=btn>gentiles[1]</button>\
-    <button class=btn>gentiles[2]</button>\
-    <button class=btn>gentiles[3]</button>'
 
 
 @app.get("/gentile",  response_class=HTMLResponse)
@@ -101,19 +100,12 @@ def gentile():
     while (a):
         random_commune_var = random_commune()
         print(random_commune_var)
-        gentiles = []
         try:
-            gentiles.append(all_gentiles["communes"]
-                            [random_commune_var["nom"].lower()][0])
+            all_gentiles["communes"][random_commune_var["nom"].lower()][0]
             a = False
         except KeyError:
             a = True
 
-    # gentiles.append(get_fake_gentile(random_commune_var["nom"]))
-    gentiles.append("gentile1")
-    gentiles.append("gentile1")
-    gentiles.append("gentile1")
-    gentiles.append("gentile1")
     return f'\
   <div class="boxTop">\
     <image src="../image/font.jpg" alt="communoquizz" class="img">\
@@ -123,9 +115,13 @@ def gentile():
     </text>\
   </div>\
   <div class="boxBottom">\
-    <div hx-get="http://localhost:8000/button" hx-trigger="load" hx-target=#buttonGentile>\
+    <div hx-get="http://localhost:8000/button/{random_commune_var["nom"]}" hx-trigger="load" hx-target=#buttonGentile hx-indicator=".htmx-indicator">\
     </div>\
-    <div id="buttonGentile" class=gentileButton></div>\
+    <div id="buttonGentile" class="gentileButton">\
+        <span class="htmx-indicator">\
+            <img src="../image/bars.svg" /> Generating fake reponse ...\
+        </span>\
+    </div>\
     <button class="btn" hx-get="http://localhost:8000/gentile" hx-target="#allInfo">next</button>\
   </div>'
 
