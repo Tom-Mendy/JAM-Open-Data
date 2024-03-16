@@ -83,16 +83,16 @@ def button():
     print("gentiles =", gentiles)
     if gentiles != []:
         return f'\
-        <button class="btn">{gentiles[0]}</button>\
-        <button class="btn">{gentiles[1]}</button>\
-        <button class="btn">{gentiles[2]}</button>\
-        <button class="btn">{gentiles[3]}</button>'
+        <button class=btn>{gentiles[0]}</button>\
+        <button class=btn>{gentiles[1]}</button>\
+        <button class=btn>{gentiles[2]}</button>\
+        <button class=btn>{gentiles[3]}</button>'
     else:
         return '\
-    <button class="btn">gentiles[0]</button>\
-    <button class="btn">gentiles[1]</button>\
-    <button class="btn">gentiles[2]</button>\
-    <button class="btn">gentiles[3]</button>'
+    <button class=btn>gentiles[0]</button>\
+    <button class=btn>gentiles[1]</button>\
+    <button class=btn>gentiles[2]</button>\
+    <button class=btn>gentiles[3]</button>'
 
 
 @app.get("/gentile",  response_class=HTMLResponse)
@@ -119,13 +119,13 @@ def gentile():
     <image src="../image/font.jpg" alt="communoquizz" class="img">\
   </div>\
   <div class="boxMiddle">\
-    <text class="text">Commun : {random_commune_var["nom"]} - Code Postal {random_commune_var["code"]}\
+    <text class="text">Commun : {random_commune_var["nom"]}\
     </text>\
   </div>\
   <div class="boxBottom">\
     <div hx-get="http://localhost:8000/button" hx-trigger="load" hx-target=#buttonGentile>\
     </div>\
-    <div id="buttonGentile"></div>\
+    <div id="buttonGentile" class=gentileButton></div>\
     <button class="btn" hx-get="http://localhost:8000/gentile" hx-target="#allInfo">next</button>\
   </div>'
 

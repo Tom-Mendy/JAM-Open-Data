@@ -76,7 +76,7 @@ body {
     left: 5%;
     right: 5%;
     position: fixed;
-    align-items: center;
+    align-items: auto;
     justify-content: space-between;
     backdrop-filter: blur(40px);
     background: transparent;
@@ -86,11 +86,16 @@ body {
     border-radius: 20px;
 }
 
+.gentileBottom {
+    width: 100%;
+    align-items: center;
+}
+
 /* Button */
 
 .btn {
-    padding: 10px 25px;
-    width:15%;
+    padding: 5px 15px;
+    /* width:15%; */
     border: 2px solid #d6d6d6;
     background: transparent;
     border-radius: 6px;
