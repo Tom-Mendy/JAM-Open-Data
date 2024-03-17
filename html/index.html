@@ -1,29 +1,24 @@
 <!DOCTYPE html>
 <html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- permet d'ajusté automatiquement la taille de la page a celle de l'écran -->
+    <title>CommunoQuizz</title>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <link rel="stylesheet" href="../css/style_main_page.css" />
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- permet d'ajusté automatiquement la taille de la page a celle de l'écran -->
-  <title>CommunoQuizz</title>
-  <script src="https://unpkg.com/htmx.org@1.9.10"></script>
-  <link rel="stylesheet" href="../css/style_main_page.css">
-</head>
-
-<body>
-
-  <header>
-    <h2 class="logo">CommunoQuizz</h2>
-  </header>
-  <div hx-get="http://localhost:8000/gentile" hx-trigger="load" hx-target="#allInfo">
-  </div>
-  <div id="allInfo"></div>
-  <script>
-    function reloadPage() {
-        location.reload();
-    }
-  </script>
-</body>
-
+  <body>
+    <header>
+      <h2 class="logo">CommunoQuizz</h2>
+    </header>
+    <div
+      hx-get="http://localhost:8000/gentile"
+      hx-trigger="load"
+      hx-target="#allInfo"
+    ></div>
+    <div id="allInfo"></div>
+  </body>
 </html>
