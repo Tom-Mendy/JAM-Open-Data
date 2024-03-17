@@ -8,6 +8,7 @@ install ollama
 
 ```bash
 curl -fsSL https://ollama.com/install.sh | sh
+ollama serve
 ```
 
 pull mistral AI
@@ -19,8 +20,7 @@ ollama pull mistral
 ### Python
 
 ```bash
-pip install fastap
-pip install "uvicorn[standard]"
+pip install -r requirement.txt
 ```
 
 ## Run
