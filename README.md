@@ -22,7 +22,7 @@ ollama pull mistral
 pip install -r requirements.txt
 ```
 
-### Virtual env
+### Virtual env (optional)
 if a virtual environnement is needed do the following steps:
 
 ```bash
@@ -38,6 +38,12 @@ launch python backend
 
 ```bash
 uvicorn main:app --reload
+```
+
+or
+
+```bash
+./start.sh
 ```
 
 open font
